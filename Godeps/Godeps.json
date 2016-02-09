@@ -1,0 +1,5 @@
+{
+	"ImportPath": "github.com/atsman/interviewrgo",
+	"GoVersion": "go1.5",
+	"Deps": []
+}
