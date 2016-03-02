@@ -1,38 +1,44 @@
 package main
 
 import (
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 	"net/http"
-  "fmt"
-  "os"
-  "io"
+	"time"
 )
 
-func handler(rw http.ResponseWriter, req *http.Request) {
-  if req.Method == "OPTIONS" {
-    rw.Header().Set("Access-Control-Allow-Headers", "accept, authorization, crop")
-    rw.Header().Set("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE")
-    rw.Header().Set("Access-Control-Allow-Origin", "*")
-    rw.Write([]byte("HELLO"))
-  }
-  if req.Method == "POST" {
-    req.ParseMultipartForm(32 << 20)
-    file, handler, err := req.FormFile("file")
-    if err != nil {
-      fmt.Println(err)
-    }
-    defer file.Close()
-    fmt.Fprintf(rw, "%v", handler.Header)
-    f, err := os.OpenFile("./test/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
-    if err != nil {
-        fmt.Println(err)
-        return
-    }
-    defer f.Close()
-    io.Copy(f, file)
-  }
+func Auth(secret string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		_, err := jwt.ParseFromRequest(c.Request, func(token *jwt.Token) (interface{}, error) {
+			b := ([]byte(secret))
+			return b, nil
+		})
+
+		if err != nil {
+			c.AbortWithError(401, err)
+		}
+	}
+}
+
+func CreateJwtToken() {
+	token := jwt.New(jwt.SigningMethodHS256)
+	token.Claims["foo"] = "bar"
+	token.Claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+	tokenString, err := token.SignedString(mySigningKey)
+}
+
+func testHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"hello": "world",
+	})
 }
 
 func main() {
-	http.HandleFunc("/upload", handler)
-	http.ListenAndServe(":8080", nil)
+	router := gin.Default()
+
+	router.Use(Auth("secret"))
+
+	router.GET("test", testHandler)
+
+	router.Run(":8080")
 }
