@@ -2,7 +2,7 @@ package main
 
 import (
   "github.com/atsman/interviewr-go/db"
-  "github.com/atsman/interviewr-go/routes"
+  "github.com/atsman/interviewr-go/handlers"
 )
 
 const (
@@ -14,7 +14,7 @@ func init()  {
 }
 
 func main() {
-	r := routes.BuildRoutes()
+	r := handlers.BuildRoutes()
 
   port := Port
   r.Run(":" + port)
