@@ -1,44 +1,21 @@
 package main
 
 import (
-	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
-	"net/http"
-	"time"
+  "github.com/atsman/interviewr-go/db"
+  "github.com/atsman/interviewr-go/routes"
 )
 
-func Auth(secret string) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		_, err := jwt.ParseFromRequest(c.Request, func(token *jwt.Token) (interface{}, error) {
-			b := ([]byte(secret))
-			return b, nil
-		})
+const (
+  Port = "7000"
+)
 
-		if err != nil {
-			c.AbortWithError(401, err)
-		}
-	}
-}
-
-func CreateJwtToken() {
-	token := jwt.New(jwt.SigningMethodHS256)
-	token.Claims["foo"] = "bar"
-	token.Claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
-	tokenString, err := token.SignedString(mySigningKey)
-}
-
-func testHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"hello": "world",
-	})
+func init()  {
+  db.Connect()
 }
 
 func main() {
-	router := gin.Default()
+	r := routes.BuildRoutes()
 
-	router.Use(Auth("secret"))
-
-	router.GET("test", testHandler)
-
-	router.Run(":8080")
+  port := Port
+  r.Run(":" + port)
 }
