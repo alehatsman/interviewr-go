@@ -23,12 +23,33 @@ func Update(db *mgo.Database, id bson.ObjectId, user map[string]interface{}) (er
 		"$set": user,
 	})
 	if err != nil {
-		return err, nil
+		return err, models.User{}
 	}
 	var updatedUser = models.User{}
 	err = getUserC(db).FindId(id).One(&updatedUser)
 	if err != nil {
-		return err, nil
+		return err, models.User{}
 	}
 	return err, updatedUser
+}
+
+func List(db *mgo.Database, query bson.M) (error, []models.User) {
+	var users []models.User
+	err := getUserC(db).Find(bson.M{}).All(&users)
+	return err, users
+}
+
+func Delete(db *mgo.Database, id bson.ObjectId) (error, models.User) {
+	var user = models.User{}
+	err := getUserC(db).FindId(id).One(&user)
+	if err != nil {
+		return err, user
+	}
+
+	err = getUserC(db).RemoveId(id)
+	if err != nil {
+		return err, user
+	}
+
+	return nil, user
 }

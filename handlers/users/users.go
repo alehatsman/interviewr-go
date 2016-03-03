@@ -39,7 +39,6 @@ func Create(c *gin.Context) {
 	}
 
 	err = userdb.Create(db, user)
-
 	if err != nil {
 		c.Error(err)
 		return
@@ -67,15 +66,15 @@ func Update(c *gin.Context) {
 		return
 	}
 
-	hexId := bson.ObjectIdHex(id)
+	hexID := bson.ObjectIdHex(id)
 
-	err, user := userdb.Update(db, hexId, user)
+	err, updatedUser := userdb.Update(db, hexID, user)
 	if err != nil {
 		c.Error(err)
 		return
 	}
 
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, updatedUser)
 }
 
 func Delete(c *gin.Context) {
@@ -83,14 +82,7 @@ func Delete(c *gin.Context) {
 	id := c.Params.ByName("id")
 	hId := bson.ObjectIdHex(id)
 
-	var user = models.User{}
-	err := getUserC(db).FindId(hId).One(&user)
-	if err != nil {
-		c.Error(err)
-		return
-	}
-
-	err = getUserC(db).RemoveId(hId)
+	err, user := userdb.Delete(db, hId)
 	if err != nil {
 		c.Error(err)
 		return
@@ -102,8 +94,7 @@ func Delete(c *gin.Context) {
 func List(c *gin.Context) {
 	db := getDb(c)
 
-	var users []models.User
-	err := getUserC(db).Find(bson.M{}).Limit(1000).All(&users)
+	err, users := userdb.List(db, bson.M{})
 	if err != nil {
 		c.Error(err)
 		return
