@@ -19,13 +19,14 @@ func Create(db *mgo.Database, user models.User) error {
 }
 
 func Update(db *mgo.Database, id bson.ObjectId, user map[string]interface{}) (error, models.User) {
+	var updatedUser = models.User{}
 	err := getUserC(db).UpdateId(id, bson.M{
 		"$set": user,
 	})
 	if err != nil {
-		return err, models.User{}
+		return err, updatedUser
 	}
-	var updatedUser = models.User{}
+
 	err = getUserC(db).FindId(id).One(&updatedUser)
 	if err != nil {
 		return err, models.User{}
