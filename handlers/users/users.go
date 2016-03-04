@@ -23,7 +23,7 @@ func getUserC(db *mgo.Database) *mgo.Collection {
 	return db.C(models.CollectionUsers)
 }
 
-func getUser(c *gin.Context) (error, models.User) {
+func getUser(c *gin.Context) (error, *models.User) {
 	user := models.User{}
 	err := c.Bind(&user)
 	return err, user
