@@ -14,7 +14,7 @@ func init()  {
 }
 
 func main() {
-	r := handlers.BuildRoutes()
+	r := handlers.NewEngine()
 
   port := Port
   r.Run(":" + port)

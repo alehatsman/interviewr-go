@@ -1,7 +1,6 @@
 package users
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/atsman/interviewr-go/db/userdb"
@@ -44,12 +43,6 @@ func Update(c *gin.Context) {
 
 	log.Debugf("Update, Id=%v", id)
 
-	if !bson.IsObjectIdHex(id) {
-		log.Debug("Update, id is not a ObjectIdHex")
-		c.Error(errors.New("id is not a ObjectId"))
-		return
-	}
-
 	var user map[string]interface{}
 	err := c.BindJSON(&user)
 	if err != nil {
@@ -57,9 +50,7 @@ func Update(c *gin.Context) {
 		return
 	}
 
-	hexID := bson.ObjectIdHex(id)
-
-	err, updatedUser := userdb.Update(db, &hexID, &user)
+	err, updatedUser := userdb.Update(db, id, &user)
 	if err != nil {
 		c.Error(err)
 		return
@@ -71,9 +62,8 @@ func Update(c *gin.Context) {
 func Delete(c *gin.Context) {
 	db := utils.GetDb(c)
 	id := c.Params.ByName("id")
-	hId := bson.ObjectIdHex(id)
 
-	err, user := userdb.Delete(db, &hId)
+	err, user := userdb.Delete(db, id)
 	if err != nil {
 		c.Error(err)
 		return

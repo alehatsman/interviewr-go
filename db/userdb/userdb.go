@@ -14,19 +14,21 @@ func GetUserC(db *mgo.Database) *mgo.Collection {
 }
 
 func Create(db *mgo.Database, user *models.User) error {
+	user.ID = bson.NewObjectId()
 	return GetUserC(db).Insert(user)
 }
 
-func Update(db *mgo.Database, id *bson.ObjectId, user *map[string]interface{}) (error, *models.User) {
+func Update(db *mgo.Database, id string, user *map[string]interface{}) (error, *models.User) {
 	var updatedUser = models.User{}
-	err := GetUserC(db).UpdateId(id, bson.M{
+	hId := bson.ObjectIdHex(id)
+	err := GetUserC(db).UpdateId(hId, bson.M{
 		"$set": user,
 	})
 	if err != nil {
 		return err, &updatedUser
 	}
 
-	err = GetUserC(db).FindId(id).One(&updatedUser)
+	err = GetUserC(db).FindId(hId).One(&updatedUser)
 	return err, &updatedUser
 }
 
@@ -36,14 +38,15 @@ func List(db *mgo.Database, query *bson.M) (error, *[]models.User) {
 	return err, &users
 }
 
-func Delete(db *mgo.Database, id *bson.ObjectId) (error, *models.User) {
+func Delete(db *mgo.Database, id string) (error, *models.User) {
 	var user = models.User{}
-	err := GetUserC(db).FindId(id).One(&user)
+	hID := bson.ObjectIdHex(id)
+	err := GetUserC(db).FindId(hID).One(&user)
 	if err != nil {
 		return err, &user
 	}
 
-	err = GetUserC(db).RemoveId(id)
+	err = GetUserC(db).RemoveId(hID)
 	if err != nil {
 		return err, &user
 	}

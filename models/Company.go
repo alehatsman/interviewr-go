@@ -12,17 +12,15 @@ const (
 
 type Company struct {
 	ID               bson.ObjectId `json:"_id,omitempty" bson:"_id,omitempty"`
-	Category         string
-	Description      string
-	Name             string
-	Owner            bson.ObjectId
-	ShortDescription string
-	Location         string
-	Email            string
-	Phone            string
-	Site             string
-	CreationDate     time.Time
-	Specialization   []string
-	Vacancies        []bson.ObjectId //todo remove
-	Comments         []bson.ObjectId //todo remove
+	Name             string        `json:"name" bson:"name" binding:"required"`
+	Category         string        `json:"category" bson:"category" binding:"required"`
+	Description      string        `json:"description" bson:"description" binding:"required"`
+	Owner            bson.ObjectId `json:"owner" bson:"owner"`
+	ShortDescription string        `json:"shortDescription" bson:"shortDescription" binding:"required"`
+	Location         string        `json:"location" bson:"location" binding:"required"`
+	Email            string        `json:"email" bson:"email" binding:"required"`
+	Phone            string        `json:"phone" bson:"phone"`
+	Site             string        `json:"site" bson:"site" binding:"required"`
+	CreationDate     time.Time     `json:"creationDate" bson:"creationDate"`
+	Specializations  []string      `json:"specializations" bson:"specializations"`
 }
