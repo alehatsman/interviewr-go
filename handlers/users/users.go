@@ -25,32 +25,6 @@ func getUser(c *gin.Context) (error, *models.User) {
 	return err, &user
 }
 
-func GetList(c *gin.Context) {
-	db := utils.GetDb(c)
-
-	err, users := userdb.GetList(db, &bson.M{})
-	if err != nil {
-		c.Error(err)
-		return
-	}
-
-	c.JSON(http.StatusOK, users)
-}
-
-func GetOne(c *gin.Context) {
-	db := utils.GetDb(c)
-	id := c.Params.ByName("id")
-
-	err, user := userdb.GetOne(db, id)
-	if err != nil {
-		log.Error(err.Error())
-		c.JSON(http.StatusNotFound, userNotFoundError)
-		return
-	}
-
-	c.JSON(http.StatusOK, user)
-}
-
 func Create(c *gin.Context) {
 	db := utils.GetDb(c)
 
@@ -98,6 +72,32 @@ func Delete(c *gin.Context) {
 	err, user := userdb.Delete(db, id)
 	if err != nil {
 		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+
+func GetList(c *gin.Context) {
+	db := utils.GetDb(c)
+
+	err, users := userdb.GetList(db, &bson.M{})
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, users)
+}
+
+func GetOne(c *gin.Context) {
+	db := utils.GetDb(c)
+	id := c.Params.ByName("id")
+
+	err, user := userdb.GetOne(db, id)
+	if err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusNotFound, userNotFoundError)
 		return
 	}
 
