@@ -32,14 +32,13 @@ func bindCompany(c *gin.Context) (error, *models.Company) {
 }
 
 func Create(c *gin.Context) {
-	db := utils.GetDb(c)
-
 	err, company := bindCompany(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, notValidModel(err))
 		return
 	}
 
+	db := utils.GetDb(c)
 	userId := utils.GetUserId(c)
 	err = companydb.Create(db, userId, company)
 	if err != nil {
@@ -51,19 +50,16 @@ func Create(c *gin.Context) {
 }
 
 func Update(c *gin.Context) {
-	db := utils.GetDb(c)
-	id := c.Params.ByName("id")
-	userID := utils.GetUserId(c)
-
-	log.Debugf("Update, Id=%v", id)
-
-	var updateModel map[string]interface{}
+	updateModel := map[string]interface{}{}
 	err := c.BindJSON(&updateModel)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, notValidModel(err))
 		return
 	}
 
+	db := utils.GetDb(c)
+	id := c.Params.ByName("id")
+	userID := utils.GetUserId(c)
 	err, updatedCompany := companydb.Update(db, userID, id, &updateModel)
 	if err != nil {
 		c.JSON(http.StatusNotFound, companyNotFoundError)

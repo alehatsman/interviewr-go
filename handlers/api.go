@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/atsman/interviewr-go/handlers/companies"
+	"github.com/atsman/interviewr-go/handlers/interviews"
 	"github.com/atsman/interviewr-go/handlers/subscriptions"
 	"github.com/atsman/interviewr-go/handlers/users"
 	"github.com/atsman/interviewr-go/handlers/vacancies"
@@ -48,6 +49,12 @@ func NewEngine() *gin.Engine {
 		authR.PUT("/vacancies/:id", vacancies.Update)
 		authR.DELETE("/vacancies/:id", vacancies.Delete)
 		authR.GET("/vacancies/:id/subscriptions", vacancies.GetVacancySubscriptions)
+
+		authR.POST("/interviews", interviews.Create)
+		authR.PUT("/interviews/:id", interviews.Update)
+		authR.DELETE("/interviews/:id", interviews.Delete)
+		authR.GET("/interviews/:id", interviews.GetOne)
+		authR.GET("/interviews", interviews.GetList)
 
 		authR.POST("/subscriptions", subscriptions.Create)
 		authR.GET("/subscriptions/:id", subscriptions.GetOne)

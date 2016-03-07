@@ -45,7 +45,7 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, vacancy)
+	c.JSON(http.StatusCreated, vacancy)
 }
 
 func Update(c *gin.Context) {

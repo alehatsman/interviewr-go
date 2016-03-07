@@ -12,6 +12,7 @@ const (
 
 type Interview struct {
 	ID        bson.ObjectId `json:"_id,omitempty" bson:"_id,omitempty"`
+	Title     string        `json:"title" bson:"title"`
 	Date      time.Time     `json:"date" bson:"date"`
 	Owner     bson.ObjectId `json:"owner" bson:"owner"`
 	Vacancy   bson.ObjectId `json:"vacancy" bson:"vacancy" binding:"required"`

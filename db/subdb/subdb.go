@@ -1,6 +1,8 @@
 package subdb
 
 import (
+	"time"
+
 	"github.com/atsman/interviewr-go/models"
 	"github.com/op/go-logging"
 	"gopkg.in/mgo.v2"
@@ -52,6 +54,7 @@ func GetSubC(db *mgo.Database) *mgo.Collection {
 
 func Create(db *mgo.Database, sub *models.Subscription) error {
 	sub.ID = bson.NewObjectId()
+	sub.CreatedAt = time.Now()
 	return GetSubC(db).Insert(sub)
 }
 

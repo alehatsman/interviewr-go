@@ -33,7 +33,7 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, sub)
+	c.JSON(http.StatusCreated, sub)
 }
 
 func Delete(c *gin.Context) {
