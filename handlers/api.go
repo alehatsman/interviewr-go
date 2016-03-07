@@ -47,10 +47,12 @@ func NewEngine() *gin.Engine {
 		authR.GET("/vacancies/:id", vacancies.GetOne)
 		authR.PUT("/vacancies/:id", vacancies.Update)
 		authR.DELETE("/vacancies/:id", vacancies.Delete)
-		//authR.GET("/vacancies/:id/subscription", getVacancySubscriptions)
+		authR.GET("/vacancies/:id/subscriptions", vacancies.GetVacancySubscriptions)
 
 		authR.POST("/subscriptions", subscriptions.Create)
 		authR.GET("/subscriptions/:id", subscriptions.GetOne)
+		authR.GET("/subscriptions", subscriptions.GetList)
+		authR.DELETE("/subscriptions/:id", subscriptions.Delete)
 	}
 	return r
 }

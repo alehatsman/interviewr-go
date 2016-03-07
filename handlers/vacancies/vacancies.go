@@ -3,6 +3,7 @@ package vacancies
 import (
 	"net/http"
 
+	"github.com/atsman/interviewr-go/db/subdb"
 	"github.com/atsman/interviewr-go/db/vacancydb"
 	"github.com/atsman/interviewr-go/handlers/utils"
 	"github.com/atsman/interviewr-go/models"
@@ -106,4 +107,21 @@ func GetOne(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, vacancy)
+}
+
+func GetVacancySubscriptions(c *gin.Context) {
+	db := utils.GetDb(c)
+	id := c.Params.ByName("id")
+
+	query := map[string]interface{}{}
+	query["vacancy"] = id
+	//query["vacancy"]
+
+	err, subs := subdb.GetList(db, query)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, subs)
 }

@@ -7,7 +7,10 @@ import (
 	"github.com/atsman/interviewr-go/handlers/utils"
 	"github.com/atsman/interviewr-go/models"
 	"github.com/gin-gonic/gin"
+	"github.com/op/go-logging"
 )
+
+var log = logging.MustGetLogger("handlers.subscriptions")
 
 func getSub(c *gin.Context) (error, *models.Subscription) {
 	sub := models.Subscription{}
@@ -33,12 +36,17 @@ func Create(c *gin.Context) {
 	c.JSON(http.StatusOK, sub)
 }
 
-func Update(c *gin.Context) {
-
-}
-
 func Delete(c *gin.Context) {
-
+	db := utils.GetDb(c)
+	userId := utils.GetUserId(c)
+	id := c.Params.ByName("id")
+	err, sub := subdb.Delete(db, userId, id)
+	if err != nil {
+		log.Debug(err)
+		c.Error(err)
+		return
+	}
+	c.JSON(http.StatusOK, sub)
 }
 
 func GetOne(c *gin.Context) {
@@ -50,4 +58,15 @@ func GetOne(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, sub)
+}
+
+func GetList(c *gin.Context) {
+	db := utils.GetDb(c)
+	query := BuildQuery(c)
+	err, subs := subdb.GetList(db, query)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+	c.JSON(http.StatusOK, subs)
 }

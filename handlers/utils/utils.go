@@ -7,6 +7,7 @@ import (
 	"github.com/atsman/interviewr-go/middlewares"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 func GetDb(c *gin.Context) *mgo.Database {
@@ -32,4 +33,10 @@ func ProcessAndAddIfExist(propName string, values *url.Values, query map[string]
 	if !strutils.IsEmpty(value) {
 		query[propName] = pr(value)
 	}
+}
+
+func ConvertToObjectId(value interface{}) interface{} {
+	strVal := value.(string)
+	hexVal := bson.ObjectIdHex(strVal)
+	return hexVal
 }
