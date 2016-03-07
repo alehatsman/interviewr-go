@@ -86,3 +86,28 @@ func Delete(c *gin.Context) {
 
 	c.JSON(http.StatusOK, company)
 }
+
+func GetOne(c *gin.Context) {
+	db := utils.GetDb(c)
+	id := c.Params.ByName("id")
+
+	err, company := companydb.GetOne(db, id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, companyNotFoundError)
+		return
+	}
+
+	c.JSON(http.StatusOK, company)
+}
+
+func GetList(c *gin.Context) {
+	db := utils.GetDb(c)
+	query := BuildQuery(c)
+	err, companies := companydb.GetList(db, query)
+	if err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusNotFound, companyNotFoundError)
+		return
+	}
+	c.JSON(http.StatusOK, companies)
+}

@@ -5,6 +5,7 @@ type ApiError struct {
 	Title       string `json:"title"`
 	Description string `json:"description,omitempty"`
 	Href        string `json:"href,omitempty"`
+	Error       string `json:"error,omitempty"`
 }
 
 func NewApiError(status int, title string, description string, href string) *ApiError {

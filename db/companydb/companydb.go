@@ -38,19 +38,13 @@ func Update(db *mgo.Database, userId string, companyId string, updateModel *map[
 	return err, &updatedCompany
 }
 
-func List(db *mgo.Database, query *bson.M) (error, *[]models.Company) {
-	var companies []models.Company
-	err := GetCompanyC(db).Find(bson.M{}).All(&companies)
-	return err, &companies
-}
-
 func Delete(db *mgo.Database, userId string, companyId string) (error, *models.Company) {
-	hUserId := bson.ObjectIdHex(userId)
-	hCompanyId := bson.ObjectIdHex(companyId)
+	hUserID := bson.ObjectIdHex(userId)
+	hCompanyID := bson.ObjectIdHex(companyId)
 
 	query := bson.M{
-		"_id":   hCompanyId,
-		"owner": hUserId,
+		"_id":   hCompanyID,
+		"owner": hUserID,
 	}
 
 	company := models.Company{}
@@ -64,5 +58,21 @@ func Delete(db *mgo.Database, userId string, companyId string) (error, *models.C
 		return err, &company
 	}
 
+	//todo: add removing vacancies and related cascading stuff.
+
 	return nil, &company
+}
+
+func GetOne(db *mgo.Database, id string) (error, *models.Company) {
+	hID := bson.ObjectIdHex(id)
+	company := models.Company{}
+	err := GetCompanyC(db).FindId(hID).One(&company)
+	return err, &company
+}
+
+func GetList(db *mgo.Database, query interface{}) (error, *[]models.Company) {
+	companies := []models.Company{}
+	log.Debug(query)
+	err := GetCompanyC(db).Find(query).All(&companies)
+	return err, &companies
 }

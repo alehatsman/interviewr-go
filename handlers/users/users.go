@@ -3,6 +3,7 @@ package users
 import (
 	"net/http"
 
+	"github.com/atsman/interviewr-go/db/companydb"
 	"github.com/atsman/interviewr-go/db/userdb"
 	"github.com/atsman/interviewr-go/handlers/utils"
 	"github.com/atsman/interviewr-go/models"
@@ -13,10 +14,41 @@ import (
 
 var log = logging.MustGetLogger("handlers.users")
 
+var userNotFoundError = utils.ApiError{
+	Status: http.StatusNotFound,
+	Title:  "User not found",
+}
+
 func getUser(c *gin.Context) (error, *models.User) {
 	user := models.User{}
 	err := c.Bind(&user)
 	return err, &user
+}
+
+func GetList(c *gin.Context) {
+	db := utils.GetDb(c)
+
+	err, users := userdb.GetList(db, &bson.M{})
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, users)
+}
+
+func GetOne(c *gin.Context) {
+	db := utils.GetDb(c)
+	id := c.Params.ByName("id")
+
+	err, user := userdb.GetOne(db, id)
+	if err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusNotFound, userNotFoundError)
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
 }
 
 func Create(c *gin.Context) {
@@ -72,14 +104,18 @@ func Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-func List(c *gin.Context) {
+func GetUserCompanies(c *gin.Context) {
 	db := utils.GetDb(c)
+	id := c.Params.ByName("id")
 
-	err, users := userdb.List(db, &bson.M{})
+	err, companies := companydb.GetList(db, &bson.M{
+		"owner": bson.ObjectIdHex(id),
+	})
+
 	if err != nil {
-		c.Error(err)
+		c.JSON(http.StatusNotFound, userNotFoundError)
 		return
 	}
 
-	c.JSON(http.StatusOK, users)
+	c.JSON(http.StatusOK, companies)
 }

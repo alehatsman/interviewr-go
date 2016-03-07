@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/atsman/interviewr-go/handlers/companies"
 	"github.com/atsman/interviewr-go/handlers/users"
+	"github.com/atsman/interviewr-go/handlers/vacancies"
 	"github.com/atsman/interviewr-go/middlewares"
 	"github.com/gin-gonic/gin"
 )
@@ -25,26 +26,27 @@ func NewEngine() *gin.Engine {
 	{
 		//authR.POST("/images", uploadImage)
 
-		authR.GET("/users", users.List)
+		authR.GET("/users", users.GetList)
+		authR.GET("/users/:id", users.GetOne)
 		authR.PUT("/users/:id", users.Update)
 		authR.DELETE("/users/:id", users.Delete)
-		//authR.GET("/users/:id/companies", getUserCompanies)
+		authR.GET("/users/:id/companies", users.GetUserCompanies)
 
-		//authR.GET("/companies", getCompaniesList)
+		authR.GET("/companies", companies.GetList)
 		authR.POST("/companies", companies.Create)
-		//authR.GET("/companies/:id", getCompany)
+		authR.GET("/companies/:id", companies.GetOne)
 		authR.PUT("/companies/:id", companies.Update)
 		authR.DELETE("/companies/:id", companies.Delete)
 
-		/*authR.GET("/companies/:id/comments", getCompanyComments)
-		authR.POST("/companies/:id/comments", createCompanyComment)
+		//authR.GET("/companies/:id/comments", getCompanyComments)
+		//authR.POST("/companies/:id/comments", createCompanyComment)
 
-		authR.GET("/vacancies", getVacanciesList)
-		authR.POST("/vacancies", createVacancy)
-		authR.GET("/vacancies/:id", getVacancy)
-		authR.PUT("/vacancies/:id", updateVacancy)
-		authR.DELETE("/vacancies/:id", deleteVacancy)
-		authR.GET("/vacancies/:id/subscription", getVacancySubscriptions)*/
+		authR.GET("/vacancies", vacancies.GetList)
+		authR.POST("/vacancies", vacancies.Create)
+		authR.GET("/vacancies/:id", vacancies.GetOne)
+		authR.PUT("/vacancies/:id", vacancies.Update)
+		authR.DELETE("/vacancies/:id", vacancies.Delete)
+		//authR.GET("/vacancies/:id/subscription", getVacancySubscriptions)
 	}
 	return r
 }

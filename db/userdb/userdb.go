@@ -19,7 +19,7 @@ func Create(db *mgo.Database, user *models.User) error {
 }
 
 func Update(db *mgo.Database, id string, user *map[string]interface{}) (error, *models.User) {
-	var updatedUser = models.User{}
+	updatedUser := models.User{}
 	hId := bson.ObjectIdHex(id)
 	err := GetUserC(db).UpdateId(hId, bson.M{
 		"$set": user,
@@ -32,14 +32,8 @@ func Update(db *mgo.Database, id string, user *map[string]interface{}) (error, *
 	return err, &updatedUser
 }
 
-func List(db *mgo.Database, query *bson.M) (error, *[]models.User) {
-	var users []models.User
-	err := GetUserC(db).Find(bson.M{}).All(&users)
-	return err, &users
-}
-
 func Delete(db *mgo.Database, id string) (error, *models.User) {
-	var user = models.User{}
+	user := models.User{}
 	hID := bson.ObjectIdHex(id)
 	err := GetUserC(db).FindId(hID).One(&user)
 	if err != nil {
@@ -52,4 +46,17 @@ func Delete(db *mgo.Database, id string) (error, *models.User) {
 	}
 
 	return nil, &user
+}
+
+func GetOne(db *mgo.Database, id string) (error, *models.User) {
+	hID := bson.ObjectIdHex(id)
+	user := models.User{}
+	err := GetUserC(db).FindId(hID).One(&user)
+	return err, &user
+}
+
+func GetList(db *mgo.Database, query *bson.M) (error, *[]models.User) {
+	users := []models.User{}
+	err := GetUserC(db).Find(bson.M{}).All(&users)
+	return err, &users
 }
