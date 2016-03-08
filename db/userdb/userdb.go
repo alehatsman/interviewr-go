@@ -48,11 +48,17 @@ func Delete(db *mgo.Database, id string) (error, *models.User) {
 	return nil, &user
 }
 
-func GetOne(db *mgo.Database, id string) (error, *models.User) {
-	hID := bson.ObjectIdHex(id)
+func GetOne(db *mgo.Database, query interface{}) (error, *models.User) {
 	user := models.User{}
-	err := GetUserC(db).FindId(hID).One(&user)
+	err := GetUserC(db).Find(query).One(&user)
 	return err, &user
+}
+
+func GetOneById(db *mgo.Database, id string) (error, *models.User) {
+	hID := bson.ObjectIdHex(id)
+	return GetOne(db, bson.M{
+		"_id": hID,
+	})
 }
 
 func GetList(db *mgo.Database, query *bson.M) (error, *[]models.User) {

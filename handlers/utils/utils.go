@@ -40,3 +40,9 @@ func ConvertToObjectId(value interface{}) interface{} {
 	hexVal := bson.ObjectIdHex(strVal)
 	return hexVal
 }
+
+func FirstElem(field string) *bson.M {
+	return &bson.M{
+		"$arrayElemAt": []interface{}{field, 0},
+	}
+}

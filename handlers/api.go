@@ -2,7 +2,9 @@ package handlers
 
 import (
 	"github.com/atsman/interviewr-go/handlers/companies"
+	"github.com/atsman/interviewr-go/handlers/images"
 	"github.com/atsman/interviewr-go/handlers/interviews"
+	"github.com/atsman/interviewr-go/handlers/meta"
 	"github.com/atsman/interviewr-go/handlers/subscriptions"
 	"github.com/atsman/interviewr-go/handlers/users"
 	"github.com/atsman/interviewr-go/handlers/vacancies"
@@ -18,15 +20,16 @@ func NewEngine() *gin.Engine {
 
 	r1 := r.Group("/api/v1")
 	{
-		//r1.POST("/login", login)
+		r1.POST("/login", users.Login)
 		r1.POST("/users", users.Create)
-		//r1.GET("/images/:id", getImage)
+		r1.GET("/images/:id", images.GetOne)
 	}
+
+	r1.POST("/images", images.Create)
 
 	authR := r1.Group("/")
 	authR.Use(middlewares.Auth("secret"))
 	{
-		//authR.POST("/images", uploadImage)
 
 		authR.GET("/users", users.GetList)
 		authR.GET("/users/:id", users.GetOne)
@@ -50,16 +53,22 @@ func NewEngine() *gin.Engine {
 		authR.DELETE("/vacancies/:id", vacancies.Delete)
 		authR.GET("/vacancies/:id/subscriptions", vacancies.GetVacancySubscriptions)
 
-		authR.POST("/interviews", interviews.Create)
-		authR.PUT("/interviews/:id", interviews.Update)
-		authR.DELETE("/interviews/:id", interviews.Delete)
-		authR.GET("/interviews/:id", interviews.GetOne)
-		authR.GET("/interviews", interviews.GetList)
+		authR.POST("/interview", interviews.Create)
+		authR.PUT("/interview/:id", interviews.Update)
+		authR.DELETE("/interview/:id", interviews.Delete)
+		authR.GET("/interview/:id", interviews.GetOne)
+		authR.GET("/interview", interviews.GetList)
 
 		authR.POST("/subscriptions", subscriptions.Create)
 		authR.GET("/subscriptions/:id", subscriptions.GetOne)
 		authR.GET("/subscriptions", subscriptions.GetList)
 		authR.DELETE("/subscriptions/:id", subscriptions.Delete)
+
+		authR.GET("/meta/tags", meta.GetTags)
+		authR.GET("/meta/countries", meta.GetCountries)
+		authR.GET("/meta/categories", meta.GetCategories)
+		authR.GET("/meta/position", meta.GetPosition)
+		authR.GET("/meta/vacancyType", meta.GetVacancyType)
 	}
 	return r
 }

@@ -16,7 +16,7 @@ type Company struct {
 	Category         string        `json:"category" bson:"category" binding:"required"`
 	Description      string        `json:"description" bson:"description" binding:"required"`
 	Owner            bson.ObjectId `json:"owner" bson:"owner"`
-	ShortDescription string        `json:"shortDescription" bson:"shortDescription" binding:"required"`
+	ShortDescription string        `json:"short_description" bson:"short_description" binding:"required"`
 	Location         string        `json:"location" bson:"location" binding:"required"`
 	Email            string        `json:"email" bson:"email" binding:"required"`
 	Phone            string        `json:"phone" bson:"phone"`

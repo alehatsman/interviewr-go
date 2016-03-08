@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -30,12 +29,4 @@ func Auth(secret string) gin.HandlerFunc {
 		c.Set(USER_ID, userId)
 		c.Next()
 	}
-}
-
-func CreateJwtToken(userId string) (string, error) {
-	token := jwt.New(jwt.SigningMethodHS256)
-	token.Claims["foo"] = "bar"
-	token.Claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
-	tokenString, err := token.SignedString(userId)
-	return tokenString, err
 }

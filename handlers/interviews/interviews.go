@@ -77,9 +77,23 @@ func Delete(c *gin.Context) {
 }
 
 func GetOne(c *gin.Context) {
-
+	db := utils.GetDb(c)
+	id := c.Params.ByName("id")
+	err, interview := interviewdb.GetOne(db, id)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+	c.JSON(http.StatusOK, interview)
 }
 
 func GetList(c *gin.Context) {
-
+	db := utils.GetDb(c)
+	query := BuildQuery(c)
+	err, interviews := interviewdb.GetList(db, query)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+	c.JSON(http.StatusOK, interviews)
 }

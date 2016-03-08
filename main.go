@@ -6,7 +6,7 @@ import (
 )
 
 const (
-  Port = "7000"
+  Port = "3000"
 )
 
 func init()  {

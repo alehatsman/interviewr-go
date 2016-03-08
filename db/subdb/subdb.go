@@ -3,6 +3,7 @@ package subdb
 import (
 	"time"
 
+	"github.com/atsman/interviewr-go/handlers/utils"
 	"github.com/atsman/interviewr-go/models"
 	"github.com/op/go-logging"
 	"gopkg.in/mgo.v2"
@@ -10,12 +11,6 @@ import (
 )
 
 var log = logging.MustGetLogger("db.subscriptions")
-
-func firstElem(field string) *bson.M {
-	return &bson.M{
-		"$arrayElemAt": []interface{}{field, 0},
-	}
-}
 
 var pipeline = []bson.M{
 	{"$lookup": bson.M{
@@ -41,9 +36,9 @@ var pipeline = []bson.M{
 
 	{"$project": bson.M{
 		"_id":       1,
-		"vacancy":   firstElem("$vacancyObj"),
-		"candidate": firstElem("$candidateObj"),
-		"interview": firstElem("$interviewObj"),
+		"vacancy":   utils.FirstElem("$vacancyObj"),
+		"candidate": utils.FirstElem("$candidateObj"),
+		"interview": utils.FirstElem("$interviewObj"),
 		"createdAt": 1,
 	}},
 }
@@ -78,9 +73,13 @@ func Delete(db *mgo.Database, userId string, id string) (error, *models.Subscrip
 	return err, &sub
 }
 
-func GetOne(db *mgo.Database, userId string) (error, *models.SubscriptionViewModel) {
+func GetOne(db *mgo.Database, id string) (error, *models.SubscriptionViewModel) {
 	sub := models.SubscriptionViewModel{}
-	err := GetSubC(db).Pipe(pipeline).One(&sub)
+	hId := bson.ObjectIdHex(id)
+	findByIdAndJoin := append([]bson.M{
+		{"$match": bson.M{"_id": hId}},
+	}, pipeline...)
+	err := GetSubC(db).Pipe(findByIdAndJoin).One(&sub)
 	return err, &sub
 }
 
@@ -89,8 +88,6 @@ func GetList(db *mgo.Database, query interface{}) (error, *[]models.Subscription
 	findByAndJoin := append([]bson.M{
 		{"$match": query},
 	}, pipeline...)
-
-	log.Debug(findByAndJoin)
 
 	err := GetSubC(db).Pipe(findByAndJoin).All(&subs)
 	return err, &subs
