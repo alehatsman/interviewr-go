@@ -58,6 +58,8 @@ func Update(c *gin.Context) {
 		return
 	}
 
+	delete(updateModel, "_id")
+
 	db := utils.GetDb(c)
 	userId := utils.GetUserId(c)
 	err, updatedVacancy := vacancydb.Update(db, userId, id, &updateModel)

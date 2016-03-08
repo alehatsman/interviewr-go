@@ -12,7 +12,7 @@ const (
 
 type Vacancy struct {
 	ID             bson.ObjectId `json:"_id,omitempty" bson:"_id,omitempty"`
-	Company        bson.ObjectId `json:"company" bson:"company"`
+	Company        bson.ObjectId `json:"company_id" bson:"company_id"`
 	Owner          bson.ObjectId `json:"owner" bson:"owner"`
 	Title          string        `json:"title" bson:"title"`
 	CreationDate   time.Time     `json:"creatingDate" bson:"creatingDate"`
