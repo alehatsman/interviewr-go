@@ -32,8 +32,10 @@ func getVacancy(c *gin.Context) (error, *models.Vacancy) {
 func Create(c *gin.Context) {
 	db := utils.GetDb(c)
 	userId := utils.GetUserId(c)
+	log.Debugf("vacancies.Create, userId:%v", userId)
 
 	err, vacancy := getVacancy(c)
+	log.Debug("vacancies.Create - bind Vacancy", err, vacancy)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, badRequestError)
 		return
@@ -41,6 +43,7 @@ func Create(c *gin.Context) {
 
 	err = vacancydb.Create(db, userId, vacancy)
 	if err != nil {
+		log.Debug("vacancies.Create - err", err)
 		c.JSON(http.StatusBadRequest, badRequestError)
 		return
 	}
@@ -75,7 +78,7 @@ func Delete(c *gin.Context) {
 	db := utils.GetDb(c)
 	userId := utils.GetUserId(c)
 	id := c.Params.ByName("id")
-	err, user := vacancydb.Delete(db, userId, id)
+	err, user := vacancydb.DeleteById(db, userId, id)
 	if err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusNotFound, notFoundError)

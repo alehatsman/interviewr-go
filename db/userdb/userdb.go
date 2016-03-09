@@ -3,6 +3,7 @@ package userdb
 import (
 	"github.com/atsman/interviewr-go/models"
 	"github.com/op/go-logging"
+	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -15,6 +16,11 @@ func GetUserC(db *mgo.Database) *mgo.Collection {
 
 func Create(db *mgo.Database, user *models.User) error {
 	user.ID = bson.NewObjectId()
+	pass, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
+	if err != nil {
+		return err
+	}
+	user.Password = string(pass[:])
 	return GetUserC(db).Insert(user)
 }
 

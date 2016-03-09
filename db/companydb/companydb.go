@@ -1,6 +1,7 @@
 package companydb
 
 import (
+	"github.com/atsman/interviewr-go/db/vacancydb"
 	"github.com/atsman/interviewr-go/models"
 	"github.com/op/go-logging"
 	"gopkg.in/mgo.v2"
@@ -58,7 +59,13 @@ func Delete(db *mgo.Database, userId string, companyId string) (error, *models.C
 		return err, &company
 	}
 
-	//todo: add removing vacancies and related cascading stuff.
+	err = vacancydb.DeleteByQuery(db, bson.M{
+		"company_id": hCompanyID,
+	})
+
+	if err != nil {
+		return err, &company
+	}
 
 	return nil, &company
 }

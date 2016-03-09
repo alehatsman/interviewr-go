@@ -32,7 +32,9 @@ func bindCompany(c *gin.Context) (error, *models.Company) {
 }
 
 func Create(c *gin.Context) {
+	log.Debug("companies.Create")
 	err, company := bindCompany(c)
+	log.Debug("companies.Create - bindCompany", err, company)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, notValidModel(err))
 		return
@@ -41,6 +43,7 @@ func Create(c *gin.Context) {
 	db := utils.GetDb(c)
 	userId := utils.GetUserId(c)
 	err = companydb.Create(db, userId, company)
+	log.Debugf("companies.Create - userId := %v", userId)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, notValidModel(err))
 		return

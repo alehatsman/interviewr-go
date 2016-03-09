@@ -3,6 +3,7 @@ package vacancydb
 import (
 	"time"
 
+	"github.com/atsman/interviewr-go/db/subdb"
 	"github.com/atsman/interviewr-go/models"
 	"github.com/op/go-logging"
 	"gopkg.in/mgo.v2"
@@ -19,6 +20,7 @@ func Create(db *mgo.Database, userId string, vacancy *models.Vacancy) error {
 	vacancy.ID = bson.NewObjectId()
 	vacancy.Owner = bson.ObjectIdHex(userId)
 	vacancy.CreationDate = time.Now()
+	log.Debugf("db.vacancy - Create", vacancy)
 	return GetVacancyC(db).Insert(vacancy)
 }
 
@@ -42,7 +44,7 @@ func Update(db *mgo.Database, userId string, companyId string, updateModel *map[
 	return err, &updatedVacancy
 }
 
-func Delete(db *mgo.Database, userId string, id string) (error, *models.Vacancy) {
+func DeleteById(db *mgo.Database, userId string, id string) (error, *models.Vacancy) {
 	hUserID := bson.ObjectIdHex(userId)
 	hVacancyId := bson.ObjectIdHex(id)
 
@@ -58,12 +60,37 @@ func Delete(db *mgo.Database, userId string, id string) (error, *models.Vacancy)
 		return err, &vacancy
 	}
 
-	err = GetVacancyC(db).Remove(query)
+	err = DeleteByQuery(db, query)
+
+	return err, &vacancy
+}
+
+func DeleteByQuery(db *mgo.Database, query map[string]interface{}) error {
+	log.Debug("db.vacancy - DeleteByQuery", query)
+	err, vacIds := GetIdList(db, query)
 	if err != nil {
-		return err, &vacancy
+		return err
 	}
 
-	return nil, &vacancy
+	log.Debug("db.vacancy - DeleteByQuery, vacIds", vacIds)
+
+	_, err = GetVacancyC(db).RemoveAll(query)
+	if err != nil {
+		return err
+	}
+
+	_, err = subdb.GetSubC(db).RemoveAll(bson.M{
+		"_id": bson.M{"$in": vacIds},
+	})
+
+	return err
+}
+
+func GetIdList(db *mgo.Database, query map[string]interface{}) (error, *[]bson.ObjectId) {
+	log.Debug("db.vacancy - GetIdList, query=", query)
+	ids := []bson.ObjectId{}
+	err := GetVacancyC(db).Find(query).Distinct("_id", &ids)
+	return err, &ids
 }
 
 func GetList(db *mgo.Database, query interface{}) (error, *[]models.Vacancy) {
