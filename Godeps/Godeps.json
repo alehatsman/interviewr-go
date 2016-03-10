@@ -17,16 +17,21 @@
 			"Rev": "3d002e382355cafc15d706b92899b1961d5b79e9"
 		},
 		{
-			"ImportPath": "github.com/golang/protobuf/proto",
-			"Rev": "127091107ff5f822298f1faa7487ffcf578adcf6"
+			"ImportPath": "github.com/googollee/go-engine.io",
+			"Rev": "a66cf68b24e56df0cacdc6041b93742f983a296a"
+		},
+		{
+			"ImportPath": "github.com/googollee/go-socket.io",
+			"Comment": "0.9.x-53-g7000a8a",
+			"Rev": "7000a8a5cd56ab1c3ead7cf33de3e9b2b1906af4"
+		},
+		{
+			"ImportPath": "github.com/gorilla/websocket",
+			"Rev": "a622679ebd7a3b813862379232f645f8e690e43f"
 		},
 		{
 			"ImportPath": "github.com/itsjamie/gin-cors",
 			"Rev": "9526714e382db4023de25bfdad89cec9b7446092"
-		},
-		{
-			"ImportPath": "github.com/manucorporat/sse",
-			"Rev": "ee05b128a739a0fb76c7ebd3ae4810c1de808d6d"
 		},
 		{
 			"ImportPath": "github.com/op/go-logging",
@@ -48,15 +53,6 @@
 		{
 			"ImportPath": "golang.org/x/image/tiff",
 			"Rev": "7c492694a6443a92fd349fda0c4c7b587040f161"
-		},
-		{
-			"ImportPath": "golang.org/x/net/context",
-			"Rev": "b6d7b1396ec874c3b00f6c84cd4301a17c56c8ed"
-		},
-		{
-			"ImportPath": "gopkg.in/go-playground/validator.v8",
-			"Comment": "v8.17",
-			"Rev": "f38559b4893a333e7122cf42155be352c9b5d7c6"
 		},
 		{
 			"ImportPath": "gopkg.in/mgo.v2",
