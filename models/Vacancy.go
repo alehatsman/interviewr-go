@@ -20,5 +20,5 @@ type Vacancy struct {
 	Type           string        `json:"type,omitempty" bson:"type"`
 	Position       string        `json:"position,omitempty" bson:"position"`
 	Description    string        `json:"description,omitempty" bson:"description"`
-	RequiredSkills []string      `json:"requiredSkills,omitempty" bson:"requiredSkills"`
+	RequiredSkills []string      `json:"required_skills,omitempty" bson:"requiredSkills"`
 }
