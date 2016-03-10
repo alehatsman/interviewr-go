@@ -11,20 +11,19 @@ const (
 )
 
 type User struct {
-	ID          bson.ObjectId   `json:"_id,omitempty" bson:"_id,omitempty"`
-	Email       string          `json:"email" bson:"email"`
-	Username    string          `json:"username" bson:"username"`
-	Password    string          `json:"password" bson:"password"`
-	Name        string          `json:"name" bson:"name"`
-	Surname     string          `json:"surname" bson:"surname"`
-	About       string          `json:"about" bson:"about"`
-	Сountry     string          `json:"country" bson:"country"`
-	Phone       string          `json:"phone" bson:"phone"`
-	Dob         time.Time       `json:"dob" bson:"dob"`
-	ImageID     bson.ObjectId   `json:"imageId,omitempty" bson:"imageId,omitempty"`
-	Companies   []bson.ObjectId `json:"companies,omitempty" bson:"companies,omitempty"`
-	Experiences []Expirience    `json:"experiences" bson:"experiences"`
-	Social      Social          `json:"social" bson:"social"`
+	ID          bson.ObjectId `json:"_id,omitempty" bson:"_id,omitempty"`
+	Email       string        `json:"email,omitempty" bson:"email,omitempty"`
+	Username    string        `json:"username,omitempty" bson:"username,omitempty"`
+	Password    string        `json:"password,omitempty" bson:"password,omitempty"`
+	Name        string        `json:"name,omitempty" bson:"name,omitempty"`
+	Surname     string        `json:"surname,omitempty" bson:"surname,omitempty"`
+	About       string        `json:"about,omitempty" bson:"about,omitempty"`
+	Сountry     string        `json:"country,omitempty" bson:"country,omitempty"`
+	Phone       string        `json:"phone,omitempty" bson:"phone,omitempty"`
+	Dob         time.Time     `json:"dob,omitempty" bson:"dob,omitempty"`
+	ImageID     bson.ObjectId `json:"imageId,omitempty" bson:"imageId,omitempty"`
+	Experiences []Expirience  `json:"experiences,omitempty" bson:"experiences,omitempty"`
+	Social      Social        `json:"social,omitempty" bson:"social,omitempty"`
 }
 
 type Social struct {

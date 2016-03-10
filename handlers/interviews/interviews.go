@@ -52,6 +52,8 @@ func Update(c *gin.Context) {
 		return
 	}
 
+	delete(updateModel, "_id")
+
 	db := utils.GetDb(c)
 	id := c.Params.ByName("id")
 	userID := utils.GetUserId(c)

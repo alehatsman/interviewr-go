@@ -100,12 +100,14 @@ func Update(c *gin.Context) {
 
 	log.Debugf("Update, Id=%v", id)
 
-	var user map[string]interface{}
+	user := models.User{}
 	err := c.BindJSON(&user)
 	if err != nil {
 		c.Error(err)
 		return
 	}
+
+	user.ID = bson.ObjectId("")
 
 	err, updatedUser := userdb.Update(db, id, &user)
 	if err != nil {
