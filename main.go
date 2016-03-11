@@ -23,12 +23,20 @@ func socketHandler(c *gin.Context) {
 	Socketio_Server.On("connection", func(so socketio.Socket) {
 		fmt.Println("on connection")
 
-		so.Join("chat")
-
-		so.On("chat message", func(msg string) {
-			fmt.Println("emit:", so.Emit("chat message", msg))
-			so.BroadcastTo("chat", "chat message", msg)
+		so.On("joinRoom", func(roomId string) {
+      so.Leave()
+			fmt.Println("Join room: %v", roomId)
+      so.Join(roomId)
 		})
+
+    so.On("sendMessage", func(message interface{})  {
+      so.Emit("newMessage", message)
+    })
+
+    so.On("sendCode", func(code string)  {
+      so.Emit("receiveCodeChange", code)
+    })
+
 		so.On("disconnection", func() {
 			fmt.Println("on disconnect")
 		})
