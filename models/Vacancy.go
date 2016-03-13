@@ -10,6 +10,10 @@ const (
 	CollectionVacancies = "vacancies"
 )
 
+type Skill struct {
+	Text string `json:"text" bson:"text"`
+}
+
 type Vacancy struct {
 	ID             bson.ObjectId `json:"_id,omitempty" bson:"_id,omitempty"`
 	Company        bson.ObjectId `json:"company_id,omitempty" bson:"company_id"`
@@ -20,5 +24,5 @@ type Vacancy struct {
 	Type           string        `json:"type,omitempty" bson:"type"`
 	Position       string        `json:"position,omitempty" bson:"position"`
 	Description    string        `json:"description,omitempty" bson:"description"`
-	RequiredSkills []string      `json:"required_skills,omitempty" bson:"requiredSkills"`
+	RequiredSkills []Skill       `json:"required_skills,omitempty" bson:"requiredSkills"`
 }
