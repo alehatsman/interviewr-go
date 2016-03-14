@@ -23,7 +23,9 @@ type User struct {
 	Dob         time.Time     `json:"dob,omitempty" bson:"dob,omitempty"`
 	ImageID     bson.ObjectId `json:"imageId,omitempty" bson:"imageId,omitempty"`
 	Experiences []Expirience  `json:"experiences,omitempty" bson:"experiences,omitempty"`
-	Social      Social        `json:"social,omitempty" bson:"social,omitempty"`
+	Skills      []Skill       `json:"skills,omitempty" bson:"skills,omitempty"`
+
+	Social Social `json:"social,omitempty" bson:"social,omitempty"`
 }
 
 type Social struct {
