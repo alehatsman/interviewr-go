@@ -11,7 +11,13 @@ import (
 var log = logging.MustGetLogger("db.user")
 
 func GetUserC(db *mgo.Database) *mgo.Collection {
-	return db.C(models.CollectionUsers)
+	c := db.C(models.CollectionUsers)
+	c.EnsureIndex(mgo.Index{
+		Key:        []string{"username"},
+		Unique:     true,
+		Background: false,
+	})
+	return c
 }
 
 func Create(db *mgo.Database, user *models.User) error {
