@@ -44,7 +44,7 @@ var pipeline = []bson.M{
 		"_id":       1,
 		"title":     1,
 		"date":      1,
-		"owner":     utils.FirstElem("$ownerobj"),
+		"owner":     utils.FirstElem("$ownerObj"),
 		"vacancy":   utils.FirstElem("$vacancyObj"),
 		"candidate": utils.FirstElem("$candidateObj"),
 		"company":   utils.FirstElem("$companyObj"),
@@ -61,7 +61,7 @@ func Create(db *mgo.Database, userId string, interview *models.Interview) error 
 	return GetInterviewC(db).Insert(interview)
 }
 
-func Update(db *mgo.Database, userId string, interviewId string, updateModel *map[string]interface{}) (error, *models.Interview) {
+func Update(db *mgo.Database, userId string, interviewId string, updateModel *map[string]interface{}) (error, *models.InterviewViewModel) {
 	hUserID := bson.ObjectIdHex(userId)
 	hInterviewID := bson.ObjectIdHex(interviewId)
 
@@ -73,12 +73,11 @@ func Update(db *mgo.Database, userId string, interviewId string, updateModel *ma
 	})
 
 	if err != nil {
-		return err, &models.Interview{}
+		return err, &models.InterviewViewModel{}
 	}
 
-	updatedInterview := models.Interview{}
-	err = GetInterviewC(db).FindId(hInterviewID).One(&updatedInterview)
-	return err, &updatedInterview
+	err, interview := GetOne(db, interviewId)
+	return err, interview
 }
 
 func Delete(db *mgo.Database, userId string, interviewId string) (error, *models.Interview) {

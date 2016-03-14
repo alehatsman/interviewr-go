@@ -53,7 +53,7 @@ func Create(c *gin.Context) {
 }
 
 func Update(c *gin.Context) {
-	updateModel := map[string]interface{}{}
+	updateModel := models.CompanyUpdateModel{}
 	err := c.BindJSON(&updateModel)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, notValidModel(err))

@@ -24,7 +24,7 @@ func Create(db *mgo.Database, user *models.User) error {
 	return GetUserC(db).Insert(user)
 }
 
-func Update(db *mgo.Database, id string, user *map[string]interface{}) (error, *models.User) {
+func Update(db *mgo.Database, id string, user *models.User) (error, *models.User) {
 	updatedUser := models.User{}
 	hId := bson.ObjectIdHex(id)
 	err := GetUserC(db).UpdateId(hId, bson.M{
