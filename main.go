@@ -24,18 +24,18 @@ func socketHandler(c *gin.Context) {
 		fmt.Println("on connection")
 
 		so.On("joinRoom", func(roomId string) {
-      so.Leave()
+			//so.Leave()
 			fmt.Println("Join room: %v", roomId)
-      so.Join(roomId)
+			so.Join(roomId)
 		})
 
-    so.On("sendMessage", func(message interface{})  {
-      so.Emit("newMessage", message)
-    })
+		so.On("sendMessage", func(message interface{}) {
+			so.Emit("newMessage", message)
+		})
 
-    so.On("sendCode", func(code string)  {
-      so.Emit("receiveCodeChange", code)
-    })
+		so.On("sendCode", func(code string) {
+			so.Emit("receiveCodeChange", code)
+		})
 
 		so.On("disconnection", func() {
 			fmt.Println("on disconnect")
