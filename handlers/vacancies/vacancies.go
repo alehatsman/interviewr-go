@@ -54,14 +54,12 @@ func Create(c *gin.Context) {
 func Update(c *gin.Context) {
 	id := c.Params.ByName("id")
 
-	updateModel := map[string]interface{}{}
+	updateModel := models.VacancyUpdateModel{}
 	err := c.BindJSON(&updateModel)
 	if err != nil {
 		c.Error(err)
 		return
 	}
-
-	delete(updateModel, "_id")
 
 	db := utils.GetDb(c)
 	userId := utils.GetUserId(c)

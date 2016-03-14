@@ -24,7 +24,7 @@ func Create(db *mgo.Database, userId string, vacancy *models.Vacancy) error {
 	return GetVacancyC(db).Insert(vacancy)
 }
 
-func Update(db *mgo.Database, userId string, companyId string, updateModel *map[string]interface{}) (error, *models.Vacancy) {
+func Update(db *mgo.Database, userId string, companyId string, updateModel *models.VacancyUpdateModel) (error, *models.Vacancy) {
 	updatedVacancy := models.Vacancy{}
 	hUserID := bson.ObjectIdHex(userId)
 	hVacancyID := bson.ObjectIdHex(companyId)
