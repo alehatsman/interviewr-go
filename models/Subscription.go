@@ -12,10 +12,10 @@ const (
 
 type Subscription struct {
 	ID        bson.ObjectId `json:"_id,omitempty" bson:"_id,omitempty"`
-	Vacancy   bson.ObjectId `json:"vacancy" bson:"vacancy"`
-	Candidate bson.ObjectId `json:"candidate" bson:"candidate"`
-	Interview bson.ObjectId `json:"interview" bson:"interview"`
-	CreatedAt time.Time     `json:"createdAt" bson:"createdAt"`
+	Vacancy   bson.ObjectId `json:"vacancy,omitempty" bson:"vacancy,omitempty"`
+	Candidate bson.ObjectId `json:"candidate,omitempty" bson:"candidate,omitempty"`
+	Interview bson.ObjectId `json:"interview,omitempty" bson:"interview,omitempty"`
+	CreatedAt time.Time     `json:"createdAt,omitempty" bson:"createdAt,omitempty"`
 }
 
 type SubscriptionViewModel struct {

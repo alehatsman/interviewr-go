@@ -24,6 +24,7 @@ func Create(c *gin.Context) {
 
 	err, sub := getSub(c)
 	if err != nil {
+		log.Error("Binding error", err)
 		c.Error(err)
 		return
 	}
