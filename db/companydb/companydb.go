@@ -26,6 +26,7 @@ var pipeline = []bson.M{
 		"description":       1,
 		"owner":             utils.FirstElem("$ownerObj"),
 		"short_description": 1,
+		"imageId":           1,
 		"location":          1,
 		"email":             1,
 		"phone":             1,
