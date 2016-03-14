@@ -20,6 +20,7 @@ func getSub(c *gin.Context) (error, *models.Subscription) {
 
 func Create(c *gin.Context) {
 	db := utils.GetDb(c)
+	userId := utils.GetUserId(c)
 
 	err, sub := getSub(c)
 	if err != nil {
@@ -27,7 +28,7 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	err = subdb.Create(db, sub)
+	err = subdb.Create(db, userId, sub)
 	if err != nil {
 		c.Error(err)
 		return

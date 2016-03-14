@@ -47,9 +47,10 @@ func GetSubC(db *mgo.Database) *mgo.Collection {
 	return db.C(models.CollectionSubscriptions)
 }
 
-func Create(db *mgo.Database, sub *models.Subscription) error {
+func Create(db *mgo.Database, userId string, sub *models.Subscription) error {
 	sub.ID = bson.NewObjectId()
 	sub.CreatedAt = time.Now()
+	sub.Candidate = bson.ObjectIdHex(userId)
 	return GetSubC(db).Insert(sub)
 }
 
