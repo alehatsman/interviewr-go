@@ -58,7 +58,21 @@ func GetInterviewC(db *mgo.Database) *mgo.Collection {
 func Create(db *mgo.Database, userId string, interview *models.Interview) error {
 	interview.ID = bson.NewObjectId()
 	interview.Owner = bson.ObjectIdHex(userId)
-	return GetInterviewC(db).Insert(interview)
+
+	err := GetInterviewC(db).Insert(interview)
+
+	if err != nil {
+		return err
+	}
+
+	return subdb.GetSubC(db).Update(bson.M{
+		"vacancy":   interview.Vacancy,
+		"candidate": interview.Candidate,
+	}, bson.M{
+		"$set": bson.M{
+			"interview": interview.ID,
+		},
+	})
 }
 
 func Update(db *mgo.Database, userId string, interviewId string, updateModel *map[string]interface{}) (error, *models.InterviewViewModel) {
