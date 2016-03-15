@@ -17,9 +17,10 @@ func GetVacancyC(db *mgo.Database) *mgo.Collection {
 }
 
 func Create(db *mgo.Database, userId string, vacancy *models.Vacancy) error {
+	creationDate := time.Now()
 	vacancy.ID = bson.NewObjectId()
 	vacancy.Owner = bson.ObjectIdHex(userId)
-	vacancy.CreationDate = time.Now()
+	vacancy.CreationDate = &creationDate
 	log.Debugf("db.vacancy - Create", vacancy)
 	return GetVacancyC(db).Insert(vacancy)
 }
