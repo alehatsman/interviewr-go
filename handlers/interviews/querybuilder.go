@@ -32,11 +32,10 @@ func BuildQuery(c *gin.Context) (error, interface{}) {
 
 	relatedTo := values.Get("relatedTo")
 
-	if bson.IsObjectIdHex(relatedTo) {
-		return errors.New("relatedTo is not valid ObjectIdHex"), query
-	}
-
 	if strutils.IsNotEmpty(relatedTo) {
+		if !bson.IsObjectIdHex(relatedTo) {
+			return errors.New("relatedTo is not valid ObjectIdHex"), query
+		}
 		query["$or"] = buildRelatedToQuery(relatedTo)
 	}
 

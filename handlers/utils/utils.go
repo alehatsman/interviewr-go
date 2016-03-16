@@ -31,10 +31,10 @@ type valueProcessor func(interface{}) interface{}
 
 func ProcessAndAddIfExist(propName string, values *url.Values, query map[string]interface{}, pr valueProcessor) error {
 	value := values.Get(propName)
-	if !bson.IsObjectIdHex(value) {
-		return errors.New(propName + " is not a ObjectIdHex")
-	}
-	if !strutils.IsEmpty(value) {
+	if strutils.IsNotEmpty(value) {
+		if !bson.IsObjectIdHex(value) {
+			return errors.New(propName + " is not a ObjectIdHex")
+		}
 		query[propName] = pr(value)
 	}
 	return nil

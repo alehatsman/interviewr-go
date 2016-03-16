@@ -7,7 +7,10 @@ import (
 	"github.com/atsman/interviewr-go/handlers"
 	"github.com/gin-gonic/gin"
 	"github.com/googollee/go-socket.io"
+	"github.com/op/go-logging"
 )
+
+var log = logging.MustGetLogger("main")
 
 const (
 	Port = "3000"
@@ -24,8 +27,9 @@ func socketHandler(c *gin.Context) {
 		fmt.Println("on connection")
 
 		so.On("joinRoom", func(roomId string) {
+			log.Debugf("joinRoom, roomId: %s", roomId)
+
 			//so.Leave()
-			fmt.Println("Join room: %v", roomId)
 			so.Join(roomId)
 		})
 
