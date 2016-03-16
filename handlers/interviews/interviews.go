@@ -91,7 +91,11 @@ func GetOne(c *gin.Context) {
 
 func GetList(c *gin.Context) {
 	db := utils.GetDb(c)
-	query := BuildQuery(c)
+	err, query := BuildQuery(c)
+	if err != nil {
+		c.Error(err)
+		return
+	}
 	log.Debug("interviews - GetList, query: ", query)
 	err, interviews := interviewdb.GetList(db, query)
 	if err != nil {
