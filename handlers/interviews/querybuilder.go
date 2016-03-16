@@ -1,17 +1,44 @@
 package interviews
 
 import (
+	"errors"
+
+	"github.com/atsman/interviewr-go/commons/strutils"
 	"github.com/atsman/interviewr-go/handlers/utils"
 	"github.com/gin-gonic/gin"
+	"gopkg.in/mgo.v2/bson"
 )
 
-func BuildQuery(c *gin.Context) interface{} {
+var idsProps = []string{"owner", "vacancy", "candidate", "company"}
+
+func buildRelatedToQuery(relatedTo string) []bson.M {
+	hRelatedTo := bson.ObjectIdHex(relatedTo)
+	return []bson.M{
+		bson.M{"owner": hRelatedTo},
+		bson.M{"candidate": hRelatedTo},
+	}
+}
+
+func BuildQuery(c *gin.Context) (error, interface{}) {
 	values := c.Request.URL.Query()
 	query := map[string]interface{}{}
 
-	utils.ProcessAndAddIfExist("owner", &values, query, utils.ConvertToObjectId)
-	utils.ProcessAndAddIfExist("vacancy", &values, query, utils.ConvertToObjectId)
-	utils.ProcessAndAddIfExist("candidate", &values, query, utils.ConvertToObjectId)
-	utils.ProcessAndAddIfExist("company", &values, query, utils.ConvertToObjectId)
-	return query
+	for _, prop := range idsProps {
+		err := utils.ProcessAndAddIfExist(prop, &values, query, utils.ConvertToObjectId)
+		if err != nil {
+			return err, query
+		}
+	}
+
+	relatedTo := values.Get("relatedTo")
+
+	if bson.IsObjectIdHex(relatedTo) {
+		return errors.New("relatedTo is not valid ObjectIdHex"), query
+	}
+
+	if strutils.IsNotEmpty(relatedTo) {
+		query["$or"] = buildRelatedToQuery(relatedTo)
+	}
+
+	return nil, query
 }

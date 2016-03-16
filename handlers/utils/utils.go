@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"net/url"
 
 	"github.com/atsman/interviewr-go/commons/strutils"
@@ -28,11 +29,15 @@ func AddIfExist(propName string, values *url.Values, query map[string]interface{
 
 type valueProcessor func(interface{}) interface{}
 
-func ProcessAndAddIfExist(propName string, values *url.Values, query map[string]interface{}, pr valueProcessor) {
+func ProcessAndAddIfExist(propName string, values *url.Values, query map[string]interface{}, pr valueProcessor) error {
 	value := values.Get(propName)
+	if !bson.IsObjectIdHex(value) {
+		return errors.New(propName + " is not a ObjectIdHex")
+	}
 	if !strutils.IsEmpty(value) {
 		query[propName] = pr(value)
 	}
+	return nil
 }
 
 func ConvertToObjectId(value interface{}) interface{} {
