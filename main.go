@@ -22,6 +22,14 @@ func init() {
 
 var Socketio_Server *socketio.Server
 
+type Message struct {
+	UserId    string `json:"userId"`
+	Time      string `json:"time"`
+	Message   string `json:"message"`
+	RoomID    string `json:"roomId"`
+	UserImage string `json:"userImage"`
+}
+
 func socketHandler(c *gin.Context) {
 	Socketio_Server.On("connection", func(so socketio.Socket) {
 		fmt.Println("on connection")
@@ -33,8 +41,10 @@ func socketHandler(c *gin.Context) {
 			so.Join(roomId)
 		})
 
-		so.On("sendMessage", func(message interface{}) {
-			so.Emit("newMessage", message)
+		so.On("sendMessage", func(message Message) {
+			log.Debug("sendMessage, message: ", message)
+			log.Debug("sendMessage, roomId: ", message.RoomID)
+			so.BroadcastTo(message.RoomID, "newMessage", message)
 		})
 
 		so.On("sendCode", func(code string) {

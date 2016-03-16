@@ -2,6 +2,7 @@ package images
 
 import (
 	"bytes"
+	"errors"
 	"image"
 	"image/jpeg"
 	"io"
@@ -91,6 +92,11 @@ func Create(c *gin.Context) {
 func GetOne(c *gin.Context) {
 	db := utils.GetDb(c)
 	imageId := c.Params.ByName("id")
+
+	if !bson.IsObjectIdHex(imageId) {
+		c.Error(errors.New("imageId is not a ObjectIdHex"))
+		return
+	}
 
 	gfile, err := db.GridFS("fs").OpenId(bson.ObjectIdHex(imageId))
 	if err != nil {
