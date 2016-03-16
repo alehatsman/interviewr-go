@@ -3,6 +3,7 @@ package vacancydb
 import (
 	"time"
 
+	"github.com/atsman/interviewr-go/db/interviewdb"
 	"github.com/atsman/interviewr-go/db/subdb"
 	"github.com/atsman/interviewr-go/models"
 	"github.com/op/go-logging"
@@ -80,8 +81,12 @@ func DeleteByQuery(db *mgo.Database, query map[string]interface{}) error {
 		return err
 	}
 
-	_, err = subdb.GetSubC(db).RemoveAll(bson.M{
+	subdb.GetSubC(db).RemoveAll(bson.M{
 		"_id": bson.M{"$in": vacIds},
+	})
+
+	interviewdb.GetInterviewC(db).RemoveAll(bson.M{
+		"vacancy": bson.M{"$in": vacIds},
 	})
 
 	return err

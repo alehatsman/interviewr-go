@@ -50,7 +50,7 @@ func Delete(c *gin.Context) {
 		return
 	}
 
-	go interviewdb.GetInterviewC(db).RemoveId(sub.Interview)
+	interviewdb.GetInterviewC(db).RemoveId(sub.Interview)
 
 	c.JSON(http.StatusOK, sub)
 }

@@ -30,25 +30,35 @@ type Message struct {
 	UserImage string `json:"userImage"`
 }
 
+type CodeSharingState struct {
+	Lang   string `json:"lang"`
+	Code   string `json:"code"`
+	RoomId string `json:"roomId"`
+	Cursor Cursor `json:"cursor"`
+}
+
+type Cursor struct {
+	Column int `json:"column"`
+	Row    int `json:"row"`
+}
+
 func socketHandler(c *gin.Context) {
 	Socketio_Server.On("connection", func(so socketio.Socket) {
 		fmt.Println("on connection")
 
 		so.On("joinRoom", func(roomId string) {
 			log.Debugf("joinRoom, roomId: %s", roomId)
-
-			//so.Leave()
 			so.Join(roomId)
 		})
 
 		so.On("sendMessage", func(message Message) {
 			log.Debug("sendMessage, message: ", message)
-			log.Debug("sendMessage, roomId: ", message.RoomID)
 			so.BroadcastTo(message.RoomID, "newMessage", message)
 		})
 
-		so.On("sendCode", func(code string) {
-			so.Emit("receiveCodeChange", code)
+		so.On("sendCode", func(code CodeSharingState) {
+			log.Debug("sendCode, codeState:", code)
+			so.BroadcastTo(code.RoomId, "receiveCodeChange", code)
 		})
 
 		so.On("disconnection", func() {
