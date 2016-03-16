@@ -3,6 +3,7 @@ package subscriptions
 import (
 	"net/http"
 
+	"github.com/atsman/interviewr-go/db/interviewdb"
 	"github.com/atsman/interviewr-go/db/subdb"
 	"github.com/atsman/interviewr-go/handlers/utils"
 	"github.com/atsman/interviewr-go/models"
@@ -48,6 +49,14 @@ func Delete(c *gin.Context) {
 		c.Error(err)
 		return
 	}
+
+	err = interviewdb.GetInterviewC(db).RemoveId(sub.Interview)
+	if err != nil {
+		log.Debug(err)
+		c.Error(err)
+		return
+	}
+
 	c.JSON(http.StatusOK, sub)
 }
 
