@@ -50,12 +50,7 @@ func Delete(c *gin.Context) {
 		return
 	}
 
-	err = interviewdb.GetInterviewC(db).RemoveId(sub.Interview)
-	if err != nil {
-		log.Debug(err)
-		c.Error(err)
-		return
-	}
+	go interviewdb.GetInterviewC(db).RemoveId(sub.Interview)
 
 	c.JSON(http.StatusOK, sub)
 }
