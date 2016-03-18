@@ -118,3 +118,19 @@ func GetList(db *mgo.Database, query interface{}) (error, *[]models.CompanyViewM
 	err := GetCompanyC(db).Pipe(findByAndJoin).All(&companies)
 	return err, &companies
 }
+
+func AddComment(db *mgo.Database, userID string, id string, comment *models.Comment) error {
+	comment.ID = bson.NewObjectId()
+	comment.Author = bson.ObjectIdHex(userID)
+	err := GetCompanyC(db).UpdateId(bson.ObjectIdHex(id), bson.M{
+		"$push": bson.M{"comments": comment},
+	})
+	return err
+}
+
+func GetComments(db *mgo.Database, id string) (error, *[]models.Comment) {
+	hCompanyId := bson.ObjectIdHex(id)
+	comments := []models.Comment{}
+	err := GetCompanyC(db).FindId(hCompanyId).Distinct("comments", &comments)
+	return err, &comments
+}

@@ -28,6 +28,7 @@ type Company struct {
 	Site             string           `json:"site" bson:"site" binding:"required"`
 	CreationDate     time.Time        `json:"creation_date" bson:"creationDate"`
 	Specializations  []Specialization `json:"specializations" bson:"specializations"`
+	Comments         []Comment        `json:"comments" bson:"comments"`
 }
 
 type CompanyUpdateModel struct {
@@ -58,4 +59,5 @@ type CompanyViewModel struct {
 	Site             string           `json:"site" bson:"site" binding:"required"`
 	CreationDate     time.Time        `json:"creation_date" bson:"creationDate"`
 	Specializations  []Specialization `json:"specializations" bson:"specializations"`
+	Comments         []Comment        `json:"comments" bson:"comments"`
 }

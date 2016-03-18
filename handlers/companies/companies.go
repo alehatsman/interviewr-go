@@ -31,6 +31,12 @@ func bindCompany(c *gin.Context) (error, *models.Company) {
 	return err, &company
 }
 
+func bindComment(c *gin.Context) (error, *models.Comment) {
+	comment := models.Comment{}
+	err := c.Bind(&comment)
+	return err, &comment
+}
+
 func Create(c *gin.Context) {
 	log.Debug("companies.Create")
 	err, company := bindCompany(c)
@@ -109,4 +115,38 @@ func GetList(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, companies)
+}
+
+func AddComment(c *gin.Context) {
+	db := utils.GetDb(c)
+	userId := utils.GetUserId(c)
+	id := c.Params.ByName("id")
+	err, comment := bindComment(c)
+	if err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	err = companydb.AddComment(db, userId, id, comment)
+	if err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{})
+}
+
+func GetComments(c *gin.Context) {
+	db := utils.GetDb(c)
+	id := c.Params.ByName("id")
+
+	err, comments := companydb.GetComments(db, id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, comments)
 }

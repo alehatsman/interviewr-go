@@ -12,7 +12,7 @@ const (
 
 type Comment struct {
 	ID        bson.ObjectId `json:"_id,omitempty" bson:"_id,omitempty"`
-	Author    bson.ObjectId
-	Text      string
-	CreatedAt time.Time
+	Author    bson.ObjectId `json:"author" bson:"author"`
+	Text      string        `json:"text" bson:"text"`
+	CreatedAt time.Time     `json:"createdAt" bson:"createdAt"`
 }
