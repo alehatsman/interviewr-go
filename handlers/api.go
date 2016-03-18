@@ -45,6 +45,7 @@ func NewEngine() *gin.Engine {
 
 		authR.GET("/companies/:id/comments", companies.GetComments)
 		authR.POST("/companies/:id/comments", companies.AddComment)
+		authR.DELETE("/companies/:companyId/comments/:commentId", companies.DeleteComment)
 
 		authR.GET("/vacancies", vacancies.GetList)
 		authR.POST("/vacancies", vacancies.Create)
