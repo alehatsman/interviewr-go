@@ -18,6 +18,7 @@ type Comment struct {
 }
 
 type CommentAuthor struct {
+	ID      string        `json:"id,omitempty" bson:"id,omitempty"`
 	Name    string        `json:"name,omitempty" bson:"name,omitempty"`
 	Surname string        `json:"surname,omitempty" bson:"surname,omitempty"`
 	ImageID bson.ObjectId `json:"imageId,omitempty" bson:"imageId,omitempty"`
