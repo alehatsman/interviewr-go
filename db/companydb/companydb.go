@@ -136,3 +136,14 @@ func GetComments(db *mgo.Database, id string) (error, *[]models.Comment) {
 	err := GetCompanyC(db).FindId(hCompanyId).Distinct("comments", &comments)
 	return err, &comments
 }
+
+func DeleteComment(db *mgo.Database, companyId, commentId string) error {
+	hCompanyID := bson.ObjectIdHex(companyId)
+	hCommentID := bson.ObjectIdHex(commentId)
+
+	return GetCompanyC(db).UpdateId(hCompanyID, bson.M{
+		"$pull": bson.M{
+			"comments": bson.M{"_id": hCommentID},
+		},
+	})
+}

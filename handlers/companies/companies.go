@@ -149,3 +149,17 @@ func GetComments(c *gin.Context) {
 
 	c.JSON(http.StatusOK, comments)
 }
+
+func DeleteComment(c *gin.Context) {
+	db := utils.GetDb(c)
+	companyId := c.Params.ByName("companyId")
+	commentId := c.Params.ByName("commentId")
+
+	err := companydb.DeleteComment(db, companyId, commentId)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{})
+}
