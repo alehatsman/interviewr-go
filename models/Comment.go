@@ -12,7 +12,13 @@ const (
 
 type Comment struct {
 	ID        bson.ObjectId `json:"_id,omitempty" bson:"_id,omitempty"`
-	Author    bson.ObjectId `json:"author" bson:"author"`
+	Author    CommentAuthor `json:"author" bson:"author"`
 	Text      string        `json:"text" bson:"text"`
 	CreatedAt time.Time     `json:"createdAt" bson:"createdAt"`
+}
+
+type CommentAuthor struct {
+	Name    string        `json:"name,omitempty" bson:"name,omitempty"`
+	Surname string        `json:"surname,omitempty" bson:"surname,omitempty"`
+	ImageID bson.ObjectId `json:"imageId,omitempty" bson:"imageId,omitempty"`
 }

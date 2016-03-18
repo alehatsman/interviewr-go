@@ -1,6 +1,8 @@
 package companydb
 
 import (
+	"time"
+
 	"github.com/atsman/interviewr-go/db/vacancydb"
 	"github.com/atsman/interviewr-go/handlers/utils"
 	"github.com/atsman/interviewr-go/models"
@@ -119,9 +121,9 @@ func GetList(db *mgo.Database, query interface{}) (error, *[]models.CompanyViewM
 	return err, &companies
 }
 
-func AddComment(db *mgo.Database, userID string, id string, comment *models.Comment) error {
+func AddComment(db *mgo.Database, id string, comment *models.Comment) error {
 	comment.ID = bson.NewObjectId()
-	comment.Author = bson.ObjectIdHex(userID)
+	comment.CreatedAt = time.Now()
 	err := GetCompanyC(db).UpdateId(bson.ObjectIdHex(id), bson.M{
 		"$push": bson.M{"comments": comment},
 	})

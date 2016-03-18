@@ -119,7 +119,6 @@ func GetList(c *gin.Context) {
 
 func AddComment(c *gin.Context) {
 	db := utils.GetDb(c)
-	userId := utils.GetUserId(c)
 	id := c.Params.ByName("id")
 	err, comment := bindComment(c)
 	if err != nil {
@@ -128,7 +127,7 @@ func AddComment(c *gin.Context) {
 		return
 	}
 
-	err = companydb.AddComment(db, userId, id, comment)
+	err = companydb.AddComment(db, id, comment)
 	if err != nil {
 		log.Error(err.Error())
 		c.JSON(http.StatusBadRequest, err)
