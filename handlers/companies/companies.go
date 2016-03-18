@@ -152,7 +152,7 @@ func GetComments(c *gin.Context) {
 
 func DeleteComment(c *gin.Context) {
 	db := utils.GetDb(c)
-	companyId := c.Params.ByName("companyId")
+	companyId := c.Params.ByName("id")
 	commentId := c.Params.ByName("commentId")
 
 	err := companydb.DeleteComment(db, companyId, commentId)
