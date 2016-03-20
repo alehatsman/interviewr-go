@@ -59,6 +59,8 @@ func NewEngine() *gin.Engine {
 		authR.DELETE("/interview/:id", interviews.Delete)
 		authR.GET("/interview/:id", interviews.GetOne)
 		authR.GET("/interview", interviews.GetList)
+		authR.POST("/interview/:id/feedback", interviews.CreateFeedback)
+		authR.GET("/interview/:id/feedback", interviews.GetFeedback)
 
 		authR.POST("/subscriptions", subscriptions.Create)
 		authR.GET("/subscriptions/:id", subscriptions.GetOne)

@@ -45,14 +45,12 @@ func Create(c *gin.Context) {
 }
 
 func Update(c *gin.Context) {
-	updateModel := map[string]interface{}{}
+	updateModel := models.InterviewUpdateModel{}
 	err := c.BindJSON(&updateModel)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, notValidModel(err))
 		return
 	}
-
-	delete(updateModel, "_id")
 
 	db := utils.GetDb(c)
 	id := c.Params.ByName("id")
@@ -103,4 +101,38 @@ func GetList(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, interviews)
+}
+
+func CreateFeedback(c *gin.Context) {
+	db := utils.GetDb(c)
+	id := c.Params.ByName("id")
+
+	feedback := models.Feedback{}
+	err := c.BindJSON(&feedback)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	err = interviewdb.CreateFeedback(db, id, &feedback)
+
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, feedback)
+}
+
+func GetFeedback(c *gin.Context) {
+	db := utils.GetDb(c)
+	id := c.Params.ByName("id")
+
+	err, feedback := interviewdb.GetFeedback(db, id)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, feedback)
 }

@@ -24,6 +24,7 @@ var Socketio_Server *socketio.Server
 
 type Message struct {
 	UserId    string `json:"userId"`
+	Username  string `json:"username"`
 	Time      string `json:"time"`
 	Message   string `json:"message"`
 	RoomID    string `json:"roomId"`

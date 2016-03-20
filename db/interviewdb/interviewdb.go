@@ -1,6 +1,8 @@
 package interviewdb
 
 import (
+	"errors"
+
 	"github.com/atsman/interviewr-go/db/subdb"
 	"github.com/atsman/interviewr-go/handlers/utils"
 	"github.com/atsman/interviewr-go/models"
@@ -75,7 +77,7 @@ func Create(db *mgo.Database, userId string, interview *models.Interview) error 
 	})
 }
 
-func Update(db *mgo.Database, userId string, interviewId string, updateModel *map[string]interface{}) (error, *models.InterviewViewModel) {
+func Update(db *mgo.Database, userId string, interviewId string, updateModel *models.InterviewUpdateModel) (error, *models.InterviewViewModel) {
 	hUserID := bson.ObjectIdHex(userId)
 	hInterviewID := bson.ObjectIdHex(interviewId)
 
@@ -110,9 +112,6 @@ func Delete(db *mgo.Database, userId string, interviewId string) (error, *models
 	}
 
 	err = GetInterviewC(db).Remove(findQuery)
-	subdb.GetSubC(db).Remove(bson.M{
-		"interview": interview.ID,
-	})
 
 	return err, &interview
 }
@@ -135,4 +134,23 @@ func GetList(db *mgo.Database, query interface{}) (error, *[]models.InterviewVie
 
 	err := GetInterviewC(db).Pipe(findByAndJoin).All(&interviews)
 	return err, &interviews
+}
+
+func CreateFeedback(db *mgo.Database, interviewId string, feedback *models.Feedback) error {
+	return GetInterviewC(db).UpdateId(bson.ObjectIdHex(interviewId), bson.M{
+		"$set": bson.M{
+			"feedback": feedback,
+		},
+	})
+}
+
+func GetFeedback(db *mgo.Database, interviewId string) (error, *models.Feedback) {
+	feedback := models.Interview{}
+
+	if !bson.IsObjectIdHex(interviewId) {
+		return errors.New("Not found"), feedback.Feedback
+	}
+
+	err := GetInterviewC(db).FindId(bson.ObjectIdHex(interviewId)).One(&feedback)
+	return err, feedback.Feedback
 }
