@@ -24,3 +24,4 @@ _testmain.go
 *.prof
 Godeps/_workspace/src/
 vendor/
+.idea/

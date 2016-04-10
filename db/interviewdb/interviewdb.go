@@ -60,6 +60,7 @@ func GetInterviewC(db *mgo.Database) *mgo.Collection {
 func Create(db *mgo.Database, userId string, interview *models.Interview) error {
 	interview.ID = bson.NewObjectId()
 	interview.Owner = bson.ObjectIdHex(userId)
+	interview.Status = models.NotStarted
 
 	err := GetInterviewC(db).Insert(interview)
 
