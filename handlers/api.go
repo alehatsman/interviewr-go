@@ -23,9 +23,8 @@ func NewEngine() *gin.Engine {
 		r1.POST("/login", users.Login)
 		r1.POST("/users", users.Create)
 		r1.GET("/images/:id", images.GetOne)
+		r1.POST("/images", images.Create)
 	}
-
-	r1.POST("/images", images.Create)
 
 	authR := r1.Group("/")
 	authR.Use(middlewares.Auth("secret"))
