@@ -46,6 +46,7 @@ var pipeline = []bson.M{
 		"_id":       1,
 		"title":     1,
 		"date":      1,
+		"status":    1,
 		"owner":     utils.FirstElem("$ownerObj"),
 		"vacancy":   utils.FirstElem("$vacancyObj"),
 		"candidate": utils.FirstElem("$candidateObj"),

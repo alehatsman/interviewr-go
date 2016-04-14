@@ -16,6 +16,15 @@ const (
 	Completed  = "Completed"
 )
 
+type Message struct {
+	UserId    string `json:"userId"`
+	Username  string `json:"username"`
+	Time      string `json:"time"`
+	Message   string `json:"message"`
+	RoomID    string `json:"roomId"`
+	UserImage string `json:"userImage"`
+}
+
 type Interview struct {
 	ID        bson.ObjectId `json:"_id,omitempty" bson:"_id,omitempty"`
 	Title     string        `json:"title" bson:"title"`
@@ -27,6 +36,7 @@ type Interview struct {
 	Feedback  *Feedback     `json:"feedback,omitempty" bson:"feedback,omitempty"`
 	Status    string        `json:"status,omitempty" bson:"status"`
 	Duration  int           `json:"duration,omitempty" bson:"duration,omitempty"`
+	Messages  *[]Message    `json:"messages,omitempty" bson:"messages,omitempty"`
 }
 
 type InterviewUpdateModel struct {
