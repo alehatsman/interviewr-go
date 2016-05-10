@@ -2,6 +2,7 @@ package interviewdb
 
 import (
 	"errors"
+	"time"
 
 	"github.com/atsman/interviewr-go/db/subdb"
 	"github.com/atsman/interviewr-go/handlers/utils"
@@ -155,4 +156,44 @@ func GetFeedback(db *mgo.Database, interviewId string) (error, *models.Feedback)
 
 	err := GetInterviewC(db).FindId(bson.ObjectIdHex(interviewId)).One(&feedback)
 	return err, feedback.Feedback
+}
+
+func Start(db *mgo.Database, interviewId string) error {
+	if !bson.IsObjectIdHex(interviewId) {
+		return errors.New("Not found")
+	}
+
+	hInterviewID := bson.ObjectIdHex(interviewId)
+
+	GetInterviewC(db).Update(bson.M{
+		"_id":    hInterviewID,
+		"status": bson.M{"$ne": "InProgress"},
+	}, bson.M{
+		"$set": bson.M{
+			"status": "InProgress",
+			"start":  time.Now(),
+		},
+	})
+
+	return nil
+}
+
+func End(db *mgo.Database, interviewId string) error {
+	if !bson.IsObjectIdHex(interviewId) {
+		return errors.New("Not found")
+	}
+
+	hInterviewID := bson.ObjectIdHex(interviewId)
+
+	GetInterviewC(db).Update(bson.M{
+		"_id":    hInterviewID,
+		"status": "InProgress",
+	}, bson.M{
+		"$set": bson.M{
+			"status": "Completed",
+			"end":    time.Now(),
+		},
+	})
+
+	return nil
 }

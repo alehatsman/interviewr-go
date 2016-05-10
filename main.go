@@ -10,7 +10,7 @@ import (
 var log = logging.MustGetLogger("main")
 
 const (
-	Port = "8123"
+	Port = "3000"
 )
 
 func init() {

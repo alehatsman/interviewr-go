@@ -136,3 +136,29 @@ func GetFeedback(c *gin.Context) {
 
 	c.JSON(http.StatusOK, feedback)
 }
+
+func Start(c *gin.Context) {
+	db := utils.GetDb(c)
+	id := c.Params.ByName("id")
+
+	err := interviewdb.Start(db, id)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{})
+}
+
+func End(c *gin.Context) {
+	db := utils.GetDb(c)
+	id := c.Params.ByName("id")
+
+	err := interviewdb.End(db, id)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{})
+}

@@ -60,6 +60,8 @@ func NewEngine() *gin.Engine {
 		authR.GET("/interview", interviews.GetList)
 		authR.POST("/interview/:id/feedback", interviews.CreateFeedback)
 		authR.GET("/interview/:id/feedback", interviews.GetFeedback)
+		authR.POST("/interview/:id/start", interviews.Start)
+		authR.POST("/interview/:id/end", interviews.End)
 
 		authR.POST("/subscriptions", subscriptions.Create)
 		authR.GET("/subscriptions/:id", subscriptions.GetOne)
